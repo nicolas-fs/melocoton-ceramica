@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
       costoEnvio,
       total,
       metodoPago,
-      opcionEnvio,  // ← "Correo Argentino Clásico", "Retiro en Carlos Paz", etc.
+      opcionEnvio,
     });
 
     // Disparar notificaciones en background — no bloquean la respuesta
@@ -72,7 +72,7 @@ export async function POST(req: NextRequest) {
               unit_price: i.precio,
               currency_id: 'ARS',
             })),
-            payer: {
+                       payer: {
               name:  cliente.nombre,
               email: cliente.email,
               phone: { number: cliente.telefono },
@@ -80,7 +80,7 @@ export async function POST(req: NextRequest) {
                 street_name: cliente.direccion,
                 city:        cliente.ciudad,
                 zip_code:    cliente.codigoPostal,
-              },
+              } as any,  // ← aserción necesaria para el tipado del paquete
             },
             back_urls: {
               success: `${(process.env.SITE_URL ?? process.env.NEXT_PUBLIC_URL ?? 'http://localhost:3000')}/checkout/confirmacion?pedidoId=${pedido.id}&metodo=mercadopago`,
