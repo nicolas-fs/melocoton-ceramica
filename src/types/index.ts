@@ -19,9 +19,9 @@ export interface Producto {
   descripcion: string;
   descripcionCorta: string;
   precio: number;
-  precioOriginal?: number;       // precio antes del descuento
+  precioOriginal?: number;
   enPromocion?: boolean;
-  descuentoPorcentaje?: number;  // ej: 20 = 20% off
+  descuentoPorcentaje?: number;
   imagenes: string[];
   stock: number;
   categoria: Categoria;
@@ -66,20 +66,21 @@ export interface Pedido {
   }>;
   subtotal: number;
   costoEnvio: number;
-  opcionEnvio?: string;       // nombre legible, ej: "Correo Argentino Prioritario"
+  opcionEnvio?: string;
   total: number;
   estado: EstadoPedido;
   metodoPago: MetodoPago;
   idTransaccionMP?: string;
   idPreferenciaMP?: string;
+  trackingCorreo?: string | null;      // ← Agregado para el build
 }
 
 // ── PROMOCIÓN ─────────────────────────────────────────────
 export interface Promocion {
   id: string;
-  nombre: string;           // "Promo Verano 20% off"
-  porcentaje: number;       // 20
-  productosIds: string[];   // vacío = todos
+  nombre: string;
+  porcentaje: number;
+  productosIds: string[];
   activa: boolean;
   fechaInicio: string;
   fechaFin?: string;

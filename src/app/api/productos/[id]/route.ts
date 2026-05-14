@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { obtenerProductoPorId, actualizarProducto, eliminarProducto } from '@/lib/productos';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '../../auth/[...nextauth]/route';
+import { authOptions } from '@/lib/auth';
 
 export async function GET(_: NextRequest, { params }: { params: { id: string } }) {
   const p = await obtenerProductoPorId(params.id);
