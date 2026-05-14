@@ -1,11 +1,11 @@
-// ============================================================
-// NOTIFICACIONES — Melocotón Cerámica
+﻿// ============================================================
+// NOTIFICACIONES â€” MelocotÃ³n CerÃ¡mica
 // ============================================================
 
 import { Pedido } from '@/types';
 import { formatearPrecio } from './utils';
 
-// ── HELPERS ───────────────────────────────────────────────
+// â”€â”€ HELPERS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function nombreMetodoPago(metodo: string): string {
   return metodo === 'mercadopago' ? 'Mercado Pago' : 'Transferencia bancaria';
@@ -22,7 +22,7 @@ function nombreEstado(estado: string): string {
   return map[estado] ?? estado;
 }
 
-// ── 1. WHATSAPP A LA ARTESANA ─────────────────────────────
+// â”€â”€ 1. WHATSAPP A LA ARTESANA â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export async function enviarWhatsAppArtesana(pedido: Pedido): Promise<void> {
   const phone  = process.env.CALLMEBOT_PHONE;
@@ -36,39 +36,39 @@ export async function enviarWhatsAppArtesana(pedido: Pedido): Promise<void> {
 
   const idCorto = pedido.id.slice(-6).toUpperCase();
   const piezas = pedido.items
-    .map(i => `  📦 ${i.titulo}\n     Cantidad: *${i.cantidad}*\n     Precio unitario: ${formatearPrecio(i.precioUnitario)}`)
+    .map(i => `  ðŸ“¦ ${i.titulo}\n     Cantidad: *${i.cantidad}*\n     Precio unitario: ${formatearPrecio(i.precioUnitario)}`)
     .join('\n\n');
 
   const mensaje = [
-    `🍑 *NUEVO PEDIDO #${idCorto}*`,
+    `ðŸ‘ *NUEVO PEDIDO #${idCorto}*`,
     ``,
-    `━━━━━━━━━━━━━━━━━━━━`,
-    `📋 *PIEZAS A PREPARAR*`,
-    `━━━━━━━━━━━━━━━━━━━━`,
+    `â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”`,
+    `ðŸ“‹ *PIEZAS A PREPARAR*`,
+    `â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”`,
     piezas,
     ``,
-    `━━━━━━━━━━━━━━━━━━━━`,
-    `📬 *DATOS DE ENVÍO*`,
-    `━━━━━━━━━━━━━━━━━━━━`,
-    `👤 ${pedido.cliente.nombre}`,
-    `📍 ${pedido.cliente.direccion}`,
+    `â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”`,
+    `ðŸ“¬ *DATOS DE ENVÃO*`,
+    `â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”`,
+    `ðŸ‘¤ ${pedido.cliente.nombre}`,
+    `ðŸ“ ${pedido.cliente.direccion}`,
     `    ${pedido.cliente.ciudad}, ${pedido.cliente.provincia}`,
     `    CP: ${pedido.cliente.codigoPostal}`,
-    `📱 ${pedido.cliente.telefono}`,
-    `📧 ${pedido.cliente.email}`,
-    pedido.opcionEnvio ? `🚚 Envío: ${pedido.opcionEnvio}` : '',
-    pedido.cliente.notas ? `📝 Nota: "${pedido.cliente.notas}"` : '',
+    `ðŸ“± ${pedido.cliente.telefono}`,
+    `ðŸ“§ ${pedido.cliente.email}`,
+    pedido.opcionEnvio ? `ðŸšš EnvÃ­o: ${pedido.opcionEnvio}` : '',
+    pedido.cliente.notas ? `ðŸ“ Nota: "${pedido.cliente.notas}"` : '',
     ``,
-    `━━━━━━━━━━━━━━━━━━━━`,
-    `💰 *RESUMEN*`,
-    `━━━━━━━━━━━━━━━━━━━━`,
+    `â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”`,
+    `ðŸ’° *RESUMEN*`,
+    `â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”`,
     `Subtotal: ${formatearPrecio(pedido.subtotal)}`,
-    `Envío: ${pedido.costoEnvio === 0 ? 'Retiro en local (gratis)' : formatearPrecio(pedido.costoEnvio)}`,
+    `EnvÃ­o: ${pedido.costoEnvio === 0 ? 'Retiro en local (gratis)' : formatearPrecio(pedido.costoEnvio)}`,
     `*TOTAL: ${formatearPrecio(pedido.total)}*`,
-    `💳 Pago: ${nombreMetodoPago(pedido.metodoPago)}`,
+    `ðŸ’³ Pago: ${nombreMetodoPago(pedido.metodoPago)}`,
     `Estado: ${nombreEstado(pedido.estado)}`,
     ``,
-    `🔗 Ver en admin: ${(process.env.SITE_URL ?? process.env.NEXT_PUBLIC_URL ?? 'http://localhost:3000')}/admin/pedidos`,
+    `ðŸ”— Ver en admin: ${(process.env.SITE_URL ?? process.env.NEXT_PUBLIC_URL ?? 'http://localhost:3000')}/admin/pedidos`,
   ].filter(l => l !== null && l !== undefined).join('\n');
 
   try {
@@ -76,7 +76,7 @@ export async function enviarWhatsAppArtesana(pedido: Pedido): Promise<void> {
     const res  = await fetch(url, { signal: AbortSignal.timeout(10_000) });
 
     if (res.ok) {
-      console.log(`[WhatsApp] ✓ Enviado a ${phone} — Pedido #${idCorto}`);
+      console.log(`[WhatsApp] âœ“ Enviado a ${phone} â€” Pedido #${idCorto}`);
     } else {
       const texto = await res.text().catch(() => '');
       console.warn(`[WhatsApp] Error ${res.status}:`, texto);
@@ -88,25 +88,25 @@ export async function enviarWhatsAppArtesana(pedido: Pedido): Promise<void> {
   const adminPhone = process.env.ADMIN_WHATSAPP;
   if (adminPhone && adminPhone !== phone) {
     const resumenAdmin = [
-      `🍑 *VENTA CONFIRMADA #${idCorto}*`,
-      `👤 ${pedido.cliente.nombre}`,
-      `💰 *${formatearPrecio(pedido.total)}* (${pedido.metodoPago === 'mercadopago' ? 'Mercado Pago' : 'Transferencia'})`,
-      `📦 ${pedido.items.map(i => `${i.titulo} ×${i.cantidad}`).join(' | ')}`,
-      `🔗 ${process.env.SITE_URL ?? process.env.NEXT_PUBLIC_URL ?? ''}/admin/pedidos`,
-    ].join('\n');  // ← ¡ESTA ES LA LÍNEA CORREGIDA!
+      `ðŸ‘ *VENTA CONFIRMADA #${idCorto}*`,
+      `ðŸ‘¤ ${pedido.cliente.nombre}`,
+      `ðŸ’° *${formatearPrecio(pedido.total)}* (${pedido.metodoPago === 'mercadopago' ? 'Mercado Pago' : 'Transferencia'})`,
+      `ðŸ“¦ ${pedido.items.map(i => `${i.titulo} Ã—${i.cantidad}`).join(' | ')}`,
+      `ðŸ”— ${process.env.SITE_URL ?? process.env.NEXT_PUBLIC_URL ?? ''}/admin/pedidos`,
+    ].join('\n');  // â† Â¡ESTA ES LA LÃNEA CORREGIDA!
     try {
       const adminUrl = `https://api.callmebot.com/whatsapp.php?phone=${adminPhone}&text=${encodeURIComponent(resumenAdmin)}&apikey=${apikey}`;
       await fetch(adminUrl, { signal: AbortSignal.timeout(10_000) });
-      console.log(`[WhatsApp Admin] ✓ Copia enviada a ${adminPhone}`);
+      console.log(`[WhatsApp Admin] âœ“ Copia enviada a ${adminPhone}`);
     } catch { /* no bloquear */ }
   }
 }
 
-// ── 2. EMAIL DE COMPROBANTE AL CLIENTE ────────────────────
+// â”€â”€ 2. EMAIL DE COMPROBANTE AL CLIENTE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export async function enviarEmailComprobante(pedido: Pedido): Promise<void> {
   const apiKey    = process.env.RESEND_API_KEY;
-  const emailFrom = process.env.EMAIL_FROM  ?? 'Melocotón Cerámica <pedidos@melocotonceramica.com.ar>';
+  const emailFrom = process.env.EMAIL_FROM  ?? 'MelocotÃ³n CerÃ¡mica <pedidos@melocotonceramica.com.ar>';
   const emailAdmin = process.env.EMAIL_ADMIN;
 
   if (!apiKey) {
@@ -120,7 +120,7 @@ export async function enviarEmailComprobante(pedido: Pedido): Promise<void> {
   const payloadCliente = {
     from:    emailFrom,
     to:      pedido.cliente.email,
-    subject: `✨ Tu pedido #${idCorto} fue recibido — Melocotón Cerámica`,
+    subject: `âœ¨ Tu pedido #${idCorto} fue recibido â€” MelocotÃ³n CerÃ¡mica`,
     html,
     reply_to: emailAdmin ?? emailFrom,
   };
@@ -128,7 +128,7 @@ export async function enviarEmailComprobante(pedido: Pedido): Promise<void> {
   const payloadAdmin = emailAdmin ? {
     from:    emailFrom,
     to:      emailAdmin,
-    subject: `📦 Nuevo pedido #${idCorto} de ${pedido.cliente.nombre}`,
+    subject: `ðŸ“¦ Nuevo pedido #${idCorto} de ${pedido.cliente.nombre}`,
     html:    generarHTMLAdmin(pedido, idCorto),
   } : null;
 
@@ -163,7 +163,7 @@ export async function enviarEmailComprobante(pedido: Pedido): Promise<void> {
     resultados.forEach((r, i) => {
       const destino = i === 0 ? pedido.cliente.email : emailAdmin;
       if (r.status === 'fulfilled' && r.value.ok) {
-        console.log(`[Email] ✓ Enviado a ${destino}`);
+        console.log(`[Email] âœ“ Enviado a ${destino}`);
       } else {
         const error = r.status === 'rejected' ? r.reason : `HTTP ${r.value.status}`;
         console.warn(`[Email] Error enviando a ${destino}:`, error);
@@ -174,10 +174,10 @@ export async function enviarEmailComprobante(pedido: Pedido): Promise<void> {
   }
 }
 
-// ── RESTO DE FUNCIONES (sin cambios) ─────────────────────
+// â”€â”€ RESTO DE FUNCIONES (sin cambios) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function generarHTMLComprobante(pedido: Pedido, idCorto: string): string {
-  // ... (el HTML largo que ya tenías, no lo modifiqué)
+  // ... (el HTML largo que ya tenÃ­as, no lo modifiquÃ©)
   return '';
 }
 
@@ -189,32 +189,33 @@ function generarHTMLAdmin(pedido: Pedido, idCorto: string): string {
 function _logPedidoConsola(pedido: Pedido): void {
   const idCorto = pedido.id.slice(-6).toUpperCase();
   console.log(`
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📦 NUEVO PEDIDO #${idCorto}
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”
+ðŸ“¦ NUEVO PEDIDO #${idCorto}
+â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”
 PIEZAS:
-${pedido.items.map(i => `  • ${i.titulo} ×${i.cantidad}`).join('\n')}
+${pedido.items.map(i => `  â€¢ ${i.titulo} Ã—${i.cantidad}`).join('\n')}
 
 CLIENTE: ${pedido.cliente.nombre}
 TEL: ${pedido.cliente.telefono}
-DIRECCIÓN: ${pedido.cliente.direccion}, ${pedido.cliente.ciudad}
+DIRECCIÃ“N: ${pedido.cliente.direccion}, ${pedido.cliente.ciudad}
 CP: ${pedido.cliente.codigoPostal}
 
 TOTAL: ${formatearPrecio(pedido.total)}
 PAGO: ${pedido.metodoPago}
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”
   `);
 }
 
 export async function notificarNuevoPedido(pedido: Pedido): Promise<void> {
   await Promise.allSettled([
-    enviarWhatsAppArtesana(pedido).catch(err => console.error('[notificar] WhatsApp falló:', err.message)),
-    enviarEmailComprobante(pedido).catch(err => console.error('[notificar] Email falló:', err.message)),
+    enviarWhatsAppArtesana(pedido).catch(err => console.error('[notificar] WhatsApp fallÃ³:', err.message)),
+    enviarEmailComprobante(pedido).catch(err => console.error('[notificar] Email fallÃ³:', err.message)),
   ]);
 }
 
-// ── 3. TRACKING AL CLIENTE ─────────────────────────────
+// â”€â”€ 3. TRACKING AL CLIENTE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export async function enviarTrackingCliente(pedido: Pedido, trackingCorreo: string): Promise<void> {
-  // ... (código de tracking, sin cambios)
+  // ... (cÃ³digo de tracking, sin cambios)
 }
+
