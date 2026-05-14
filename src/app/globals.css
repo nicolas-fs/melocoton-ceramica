@@ -1,0 +1,54 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html { scroll-behavior: smooth; }
+  body { @apply font-sans text-tierra-800 bg-melocoton-50; }
+  h1, h2, h3 { @apply font-serif leading-tight; }
+  ::selection { @apply bg-melocoton-200 text-tierra-900; }
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full
+           bg-melocoton-400 text-white font-sans font-medium
+           hover:bg-melocoton-500 active:scale-95
+           transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full
+           border-2 border-melocoton-400 text-melocoton-600
+           hover:bg-melocoton-50 font-sans font-medium transition-all duration-200;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg
+           text-tierra-700 hover:bg-tierra-100 font-sans transition-all duration-200;
+  }
+  .form-input {
+    @apply w-full px-4 py-3 rounded-xl border border-melocoton-200 bg-white
+           text-tierra-900 placeholder:text-tierra-400
+           focus:outline-none focus:ring-2 focus:ring-melocoton-300 focus:border-melocoton-400
+           transition-all duration-200;
+  }
+  .form-label {
+    @apply block text-sm font-medium text-tierra-700 mb-1;
+  }
+  .container-mel {
+    @apply max-w-6xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  .section-title {
+    @apply font-serif text-3xl md:text-4xl lg:text-5xl text-tierra-900 leading-tight;
+  }
+  .badge {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-medium
+           bg-melocoton-100 text-melocoton-700;
+  }
+}
+
+@layer utilities {
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: #e9b57a #fdf8f3;
+  }
+}

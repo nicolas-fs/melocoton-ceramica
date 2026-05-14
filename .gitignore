@@ -1,0 +1,57 @@
+# ── Dependencias ──────────────────────────────────────────
+node_modules/
+.pnp
+.pnp.js
+
+# ── Build ─────────────────────────────────────────────────
+.next/
+out/
+build/
+dist/
+
+# ── Variables de entorno — NUNCA SUBIR ────────────────────
+.env
+.env.local
+.env.development
+.env.development.local
+.env.test
+.env.test.local
+.env.production
+.env.production.local
+# Excepción: el ejemplo sin valores reales SÍ se sube
+!.env.example
+!.env.production.example
+
+# ── Logs ──────────────────────────────────────────────────
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+
+# ── OS ────────────────────────────────────────────────────
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# ── Editor ────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*.sublime-workspace
+
+# ── TypeScript ────────────────────────────────────────────
+*.tsbuildinfo
+next-env.d.ts
+
+# ── Testing ───────────────────────────────────────────────
+coverage/
+.nyc_output
+
+# ── Misc ──────────────────────────────────────────────────
+.vercel
+*.pem

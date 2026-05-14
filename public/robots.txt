@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+
+# No indexar el panel de administración ni las APIs
+Disallow: /admin/
+Disallow: /admin-login
+Disallow: /api/
+Disallow: /carrito
+Disallow: /checkout
+
+# Sitemap — actualizar con tu dominio real
+Sitemap: https://melocotonceramica.vercel.app/sitemap.xml

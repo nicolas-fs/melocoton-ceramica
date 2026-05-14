@@ -1,0 +1,27 @@
+INSTRUCCIONES — Imágenes de productos
+======================================
+
+Copiá las fotos de tus productos en esta carpeta.
+
+NOMBRES SUGERIDOS:
+  taza-lo-estas-haciendo-bien-1.jpg
+  taza-lo-estas-haciendo-bien-2.jpg
+  tazon-con-ternura-1.jpg
+  set-personalizados-1.jpg
+  ... etc
+
+FORMATOS ACEPTADOS: .jpg  .jpeg  .png  .webp
+
+TAMAÑO RECOMENDADO: 800x800 px mínimo (cuadradas quedan mejor)
+
+CÓMO USARLAS EN LOS PRODUCTOS:
+  En data/productos.ts, cambiá la URL así:
+  
+  imagenes: ['/assets/productos/nombre-de-tu-foto.jpg']
+
+  O desde el panel admin, pegá:
+  /assets/productos/nombre-de-tu-foto.jpg
+
+CONSEJO: Para mejor calidad, usá Cloudinary (gratis hasta 25GB).
+  Registrate en cloudinary.com, subí la foto y pegá la URL directamente.
+  Las fotos de Cloudinary no expiran nunca.
