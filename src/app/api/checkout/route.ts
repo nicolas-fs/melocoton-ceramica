@@ -23,12 +23,10 @@ export async function POST(req: NextRequest) {
       opcionEnvio?: string;
     };
 
-    // Validaciones básicas
     if (!items?.length)   return NextResponse.json({ error: 'Carrito vacío' },      { status: 400 });
     if (!cliente?.email)  return NextResponse.json({ error: 'Email requerido' },    { status: 400 });
     if (!cliente?.nombre) return NextResponse.json({ error: 'Nombre requerido' },   { status: 400 });
 
-    // Crear el pedido en la base de datos
     const pedido = await crearPedido({
       cliente,
       items: items.map(i => ({
@@ -44,17 +42,14 @@ export async function POST(req: NextRequest) {
       opcionEnvio,
     });
 
-    // Disparar notificaciones en background — no bloquean la respuesta
     notificarNuevoPedido(pedido).catch(err =>
       console.error('[Checkout] Error en notificaciones:', err)
     );
 
-    // ── MERCADO PAGO ──────────────────────────────────────
     if (metodoPago === 'mercadopago') {
       const accessToken = process.env.MP_ACCESS_TOKEN;
 
       if (!accessToken) {
-        // Sin token de MP → confirmación directa (modo demo)
         return NextResponse.json({ pedidoId: pedido.id });
       }
 
@@ -72,7 +67,7 @@ export async function POST(req: NextRequest) {
               unit_price: i.precio,
               currency_id: 'ARS',
             })),
-                       payer: {
+            payer: {
               name:  cliente.nombre,
               email: cliente.email,
               phone: { number: cliente.telefono },
@@ -80,7 +75,7 @@ export async function POST(req: NextRequest) {
                 street_name: cliente.direccion,
                 city:        cliente.ciudad,
                 zip_code:    cliente.codigoPostal,
-              } as any,  // ← aserción necesaria para el tipado del paquete
+              },
             },
             back_urls: {
               success: `${(process.env.SITE_URL ?? process.env.NEXT_PUBLIC_URL ?? 'http://localhost:3000')}/checkout/confirmacion?pedidoId=${pedido.id}&metodo=mercadopago`,
@@ -91,7 +86,7 @@ export async function POST(req: NextRequest) {
             external_reference:   pedido.id,
             statement_descriptor: 'MELOCOTON CERAMICA',
             notification_url:     `${(process.env.SITE_URL ?? process.env.NEXT_PUBLIC_URL ?? 'http://localhost:3000')}/api/mp-webhook`,
-          },
+          } as any,  // ← forzamos el tipado para evitar conflictos con la versión del paquete
         });
 
         return NextResponse.json({
@@ -101,12 +96,10 @@ export async function POST(req: NextRequest) {
 
       } catch (mpErr: any) {
         console.error('[Checkout] Error Mercado Pago:', mpErr.message);
-        // Si MP falla, confirmamos el pedido igual
         return NextResponse.json({ pedidoId: pedido.id });
       }
     }
 
-    // ── TRANSFERENCIA ─────────────────────────────────────
     return NextResponse.json({
       pedidoId: pedido.id,
       mensaje:  'Pedido creado. En minutos te enviamos los datos bancarios por WhatsApp.',

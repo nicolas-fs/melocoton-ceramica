@@ -3,9 +3,6 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { setStock, actualizarStock } from '@/lib/productos';
 
-// POST /api/stock
-// Body: { id, stock } para setear valor absoluto
-// Body: { id, delta } para sumar/restar (ej: delta: -2 para descontar 2)
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session) return NextResponse.json({ error: 'No autorizado' }, { status: 401 });
