@@ -22,7 +22,7 @@ export default function ProductGrid({ products }: { products: Product[] }) {
       {products.map((product) => (
         <a
           key={product.id}
-          href={/productos/}
+          href={`/productos/${product.id}`}
           style={{ border: "1px solid #e2e8f0", borderRadius: "0.5rem", overflow: "hidden", textDecoration: "none", color: "inherit" }}
         >
           <img
@@ -33,7 +33,7 @@ export default function ProductGrid({ products }: { products: Product[] }) {
           <div style={{ padding: "1rem" }}>
             <h2 style={{ fontWeight: 600 }}>{product.title}</h2>
             <p style={{ fontSize: "1.25rem", fontWeight: "bold", color: "#16a34a" }}>
-              
+              ${product.price.toLocaleString("es-AR")}
             </p>
           </div>
         </a>
