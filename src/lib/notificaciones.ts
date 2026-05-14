@@ -111,7 +111,7 @@ export async function enviarWhatsAppArtesana(pedido: Pedido): Promise<void> {
     const resumenAdmin = [
       `🍑 *VENTA CONFIRMADA #${idCorto}*`,
       `👤 ${pedido.cliente.nombre}`,
-      `💰 *${formatearPrecio(pedido.total)}* (${pedido.metodoPago === 'mercadopago' ? 'Mercado Pago' : 'Transferencia'})`,
+            `💰 *${formatearPrecio(pedido.total)}* (${pedido.metodoPago === 'mercadopago' ? 'Mercado Pago' : 'Transferencia'})`,
       `📦 ${pedido.items.map(i => `${i.titulo} ×${i.cantidad}`).join(' | ')}`,
       `🔗 ${process.env.SITE_URL ?? process.env.NEXT_PUBLIC_URL ?? ''}/admin/pedidos`,
     ].join('\n');  // ← CORREGIDO: antes tenía un salto de línea literal
