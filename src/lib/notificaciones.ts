@@ -114,8 +114,7 @@ export async function enviarWhatsAppArtesana(pedido: Pedido): Promise<void> {
       `💰 *${formatearPrecio(pedido.total)}* (${pedido.metodoPago === 'mercadopago' ? 'Mercado Pago' : 'Transferencia'})`,
       `📦 ${pedido.items.map(i => `${i.titulo} ×${i.cantidad}`).join(' | ')}`,
       `🔗 ${process.env.SITE_URL ?? process.env.NEXT_PUBLIC_URL ?? ''}/admin/pedidos`,
-    ].join('
-');
+    ].join('\n');  // ← CORREGIDO: antes tenía un salto de línea literal
     try {
       const adminUrl = `https://api.callmebot.com/whatsapp.php?phone=${adminPhone}&text=${encodeURIComponent(resumenAdmin)}&apikey=${apikey}`;
       await fetch(adminUrl, { signal: AbortSignal.timeout(10_000) });
