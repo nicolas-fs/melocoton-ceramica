@@ -1,0 +1,17 @@
+# Imágenes de Productos
+
+## Cómo agregar imágenes reales:
+
+### Opción A — Cloudinary (recomendada, gratis)
+1. Creá cuenta en cloudinary.com
+2. Subí tus fotos en Media Library → Upload
+3. Copiá la URL y pegala en data/productos.ts
+
+### Opción B — Carpeta local (para empezar rápido)
+1. Poné tus fotos en esta carpeta (public/images/productos/)
+2. Usá el nombre del slug del producto, ej: taza-lo-estas-haciendo-bien.jpg
+3. En data/productos.ts ponés: imagenes: ['/images/productos/taza-lo-estas-haciendo-bien.jpg']
+
+### Opción C — Arrastrar al panel admin
+Una vez que el sitio esté online, podés pegar URLs de Cloudinary 
+directamente desde el panel admin en /admin/productos.

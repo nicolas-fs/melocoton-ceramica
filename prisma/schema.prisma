@@ -1,0 +1,105 @@
+// ============================================================
+// PRISMA SCHEMA — Melocotón Cerámica
+// Base de datos: PostgreSQL (Neon, Supabase, o cualquier PG)
+//
+// Variables de entorno requeridas:
+//   DATABASE_URL="postgresql://user:pass@host:5432/melocoton?sslmode=require"
+//
+// Comandos:
+//   npx prisma db push          → sincronizar schema con la DB
+//   npx prisma studio           → explorador visual de datos
+//   npm run db:seed             → cargar productos iniciales
+// ============================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ── PRODUCTO ──────────────────────────────────────────────
+model Producto {
+  id                  String   @id @default(cuid())
+  titulo              String
+  slug                String   @unique
+  descripcion         String   @default("")
+  descripcionCorta    String   @default("")
+  precio              Float
+  precioOriginal      Float?
+  enPromocion         Boolean  @default(false)
+  descuentoPorcentaje Int?
+  imagenes            String[] // array de URLs o base64
+  stock               Int      @default(0)
+  categoria           String   // 'tazas' | 'mates' | 'tazones-xl' | 'mini-taza' | 'portasahumerios' | 'bowls' | 'cazuelas' | 'sets' | 'bandejas' | 'platos' | 'te-para-uno' | 'otros' | 'fechas-especiales' | 'tazas-con-frases'
+  destacado           Boolean  @default(false)
+  etiquetas           String[] @default([])
+  creadoEn            DateTime @default(now())
+  actualizadoEn       DateTime @updatedAt
+
+  @@map("productos")
+}
+
+// ── PEDIDO ────────────────────────────────────────────────
+model Pedido {
+  id               String   @id @default(cuid())
+  estado           String   @default("pendiente") // pendiente | pagado | enviado | entregado | cancelado
+  metodoPago       String   // mercadopago | transferencia
+  subtotal         Float
+  costoEnvio       Float    @default(0)
+  total            Float
+  opcionEnvio      String?
+  trackingCorreo   String?
+  idTransaccionMP  String?
+  idPreferenciaMP  String?
+
+  // Datos del cliente
+  clienteNombre      String
+  clienteEmail       String
+  clienteTelefono    String
+  clienteDireccion   String
+  clienteCiudad      String
+  clienteProvincia   String
+  clienteCodigoPostal String
+  clienteNotas       String?
+
+  items     ItemPedido[]
+  creadoEn  DateTime @default(now())
+
+  @@map("pedidos")
+}
+
+model ItemPedido {
+  id             String  @id @default(cuid())
+  pedidoId       String
+  productoId     String
+  titulo         String
+  cantidad       Int
+  precioUnitario Float
+
+  pedido Pedido @relation(fields: [pedidoId], references: [id], onDelete: Cascade)
+
+  @@map("items_pedido")
+}
+
+// ── CONSULTA MAYORISTA ────────────────────────────────────
+model ConsultaMayorista {
+  id             String   @id @default(cuid())
+  nombre         String
+  email          String
+  telefono       String
+  empresa        String
+  ubicacion      String
+  redesSociales  String
+  rubros         String[] @default([])
+  destinos       String[] @default([])
+  tipoVenta      String?
+  personalizacion String?
+  comentarios    String?
+  estado         String   @default("nueva")
+  creadoEn       DateTime @default(now())
+
+  @@map("consultas_mayorista")
+}

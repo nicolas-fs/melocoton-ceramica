@@ -1,0 +1,60 @@
+/* Fuentes Google — Readex Pro principal + Dancing Script para subtítulo hero */
+@import url('https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html { scroll-behavior: smooth; }
+  /* CAMBIO 2: fondo rosa muy claro fiel a la imagen de referencia */
+  body {
+    @apply text-tierra-800;
+    font-family: 'Readex Pro', sans-serif;
+    background-color: #FDF0EC;
+  }
+  h1, h2, h3, h4 {
+    font-family: 'Readex Pro', sans-serif;
+    @apply leading-tight;
+  }
+  ::selection { @apply bg-melocoton-200 text-tierra-900; }
+}
+
+@layer components {
+  /* CAMBIO 2: botón coral/terracota fiel a la imagen (#E8654A) */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full
+           text-white font-medium active:scale-95
+           transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed;
+    font-family: 'Readex Pro', sans-serif;
+    background-color: #E8654A;
+  }
+  .btn-primary:hover { background-color: #d4563c; }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full
+           border-2 font-medium transition-all duration-200;
+    font-family: 'Readex Pro', sans-serif;
+    border-color: #E8654A;
+    color: #E8654A;
+  }
+  .btn-secondary:hover { background-color: #fff5f2; }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg
+           text-tierra-700 hover:bg-tierra-100 transition-all duration-200;
+    font-family: 'Readex Pro', sans-serif;
+  }
+
+  .form-input {
+    @apply w-full px-4 py-3 rounded-xl border border-tierra-200 bg-white
+           text-tierra-900 placeholder:text-tierra-400
+           focus:outline-none focus:ring-2 focus:ring-melocoton-400 focus:border-melocoton-400
+           transition-all duration-200;
+    font-family: 'Readex Pro', sans-serif;
+  }
+  .form-label   { @apply block text-sm font-medium text-tierra-700 mb-1.5; }
+  .section-title { @apply text-3xl md:text-4xl text-tierra-900 font-semibold; }
+  .container-mel { @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8; }
+}
