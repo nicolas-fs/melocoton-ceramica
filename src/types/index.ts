@@ -7,7 +7,7 @@ export type Categoria =
  | 'mini-taza' | 'portasahumerios' | 'bowls'
  | 'cazuelas' | 'sets' | 'bandejas'
  | 'platos' | 'te-para-uno' | 'otros'
-  | 'fechas-especiales' | 'tazas-con-frases';
+  | 'fechas-especiales' | 'tazas-con-frases' | 'tazones';
 
 export type EstadoPedido =
  | 'pendiente' | 'pagado' | 'enviado' | 'entregado' | 'cancelado';
@@ -70,7 +70,8 @@ export interface Pedido {
  subtotal: number;
  costoEnvio: number;
  opcionEnvio?: string; // nombre legible, ej: "Correo Argentino Prioritario"
- total: number;
+  trackingCorreo?: string; 
+  total: number;
  estado: EstadoPedido;
  metodoPago: MetodoPago;
  idTransaccionMP?: string;

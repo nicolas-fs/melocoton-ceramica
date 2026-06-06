@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
  try {
  // ── HAL-04 FIX: Rate limiting en checkout ────────────
  const ip = getClientIp(req);
- const rl = checkRateLimit(, RATE_LIMIT_CHECKOUT.maxAttempts, RATE_LIMIT_CHECKOUT.windowMs, RATE_LIMIT_CHECKOUT.blockMs);
+ const rl = checkRateLimit(ip, RATE_LIMIT_CHECKOUT.maxAttempts, RATE_LIMIT_CHECKOUT.windowMs, RATE_LIMIT_CHECKOUT.blockMs);
  if (!rl.allowed) {
  return NextResponse.json({ error: 'Demasiadas solicitudes. Intentá más tarde.' }, { status: 429 });
  }
@@ -117,7 +117,6 @@ export async function POST(req: NextRequest) {
  phone: { number: cliente.telefono.replace(/\D/g, '').substring(0, 20) },
  address: {
  street_name: cliente.direccion?.trim().substring(0, 100),
- city: cliente.ciudad?.trim().substring(0, 50),
  zip_code: cliente.codigoPostal?.replace(/\D/g, '').substring(0, 10),
  },
  },

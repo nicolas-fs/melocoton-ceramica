@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '../../auth/[...nextauth]/route';
+import { authOptions } from '@/lib/authOptions';
 import { togglePromocion, eliminarPromocion } from '@/lib/promociones';
 
 // PATCH /api/promociones/[id] → activar/desactivar

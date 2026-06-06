@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { obtenerProductos, crearProducto } from '@/lib/productos';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '../auth/[...nextauth]/route';
-
+import { authOptions } from '@/lib/authOptions';
 export async function GET(req: NextRequest) {
  const { searchParams } = new URL(req.url);
  const productos = await obtenerProductos({
