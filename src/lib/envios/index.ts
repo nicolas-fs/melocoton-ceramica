@@ -59,17 +59,16 @@ function esGBA(cp: string): boolean {
 // a sucursal más cercana: $9.000
 // a domicilio:            $13.000
 const TARIFAS = {
-  aSucursal: 9000,   // a sucursal más cercana (cualquier zona)
-  aDomicilio: 13000, // a domicilio (cualquier zona)
+  aSucursal: 9000,
+  aDomicilio: 13000,
 };
 
 // ── PRECIOS POR KG (placeholder hasta que Ignacio confirme) ─
 // FIX 4: nueva modalidad por peso
-// Ignacio debe confirmar los precios reales. Por ahora 3 tramos.
 const TARIFAS_KG = {
-  hasta1kg:  9000,   // ← precio provisorio para hasta 1 kg
-  hasta3kg:  11000,  // ← confirmar con Ignacio
-  hasta5kg:  14000,  // ← confirmar con Ignacio
+  hasta1kg:  9000,
+  hasta3kg:  11000,
+  hasta5kg:  14000,
 };
 
 // ── FUNCIÓN PRINCIPAL ─────────────────────────────────────
@@ -81,7 +80,6 @@ export function cotizarEnvio(datos: DatosEnvio): OpcionEnvio[] {
   const cordoba  = esProvinciaCordoba(provincia);
 
   const opciones: OpcionEnvio[] = [
-    // Retiro en Carlos Paz — siempre gratis
     {
       id:          'retiro-local',
       nombre:      'Retiro en Carlos Paz',
@@ -93,8 +91,6 @@ export function cotizarEnvio(datos: DatosEnvio): OpcionEnvio[] {
       gratis:      true,
       nota:        'Coordinamos día y horario por WhatsApp',
     },
-
-    // FIX 2: A sucursal más cercana — precio único $9.000
     {
       id:          'correo-sucursal',
       nombre:      'Correo Argentino — Sucursal',
@@ -106,8 +102,6 @@ export function cotizarEnvio(datos: DatosEnvio): OpcionEnvio[] {
       gratis:      false,
       nota:        'Retirás en la sucursal de Correo Argentino más cercana a tu domicilio',
     },
-
-    // FIX 2: A domicilio — precio único $13.000
     {
       id:          'correo-domicilio',
       nombre:      'Correo Argentino — Domicilio',
@@ -118,8 +112,6 @@ export function cotizarEnvio(datos: DatosEnvio): OpcionEnvio[] {
       seguimiento: true,
       gratis:      false,
     },
-
-    // FIX 4: Envío por peso — 3 tramos (precios provisorios hasta confirmar con Ignacio)
     {
       id:          'correo-por-peso-1',
       nombre:      'Envío por peso — hasta 1 kg',
@@ -168,7 +160,7 @@ export function formatearPrecioEnvio(precio: number): string {
   }).format(precio);
 }
 
-// Corrección: ahora acepta diasMin y diasMax opcionales y los incluye en el texto
+// CORREGIDO: acepta OpcionEnvio y opcionalmente días
 export function textoEntrega(opcion: OpcionEnvio, diasMin?: number, diasMax?: number): string {
   const rango = (diasMin !== undefined && diasMax !== undefined) ? ` · ${diasMin} a ${diasMax} días` : '';
   switch (opcion.id) {
