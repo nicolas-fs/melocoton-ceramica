@@ -29,7 +29,7 @@ export default function CartSidebar() {
  <div className="flex flex-col items-center justify-center h-full text-center gap-4">
  <span className="text-5xl"></span>
  <p className="font-serif text-lg text-tierra-600">Tu carrito está vacío</p>
- <button onClick={cerrarCarrito} className="btn-primary mt-2">Ver catálogo</button>
+ <Link href="/catalogo" onClick={cerrarCarrito} className="btn-primary mt-2">Ver catálogo</Link>
  </div>
  ) : (
  <ul className="space-y-4">

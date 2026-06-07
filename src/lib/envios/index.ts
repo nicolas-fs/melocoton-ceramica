@@ -1,155 +1,169 @@
 // ============================================================
 // SISTEMA DE ENVÍOS — Melocotón Cerámica
-// Transportista único: Correo Argentino
+// Transportista: Correo Argentino
 // Origen: Villa Carlos Paz, Córdoba (CP 5152)
 //
-// Tarifas aproximadas vigentes Abril 2026.
+// Tarifas actualizadas Junio 2026.
 // Actualizá TARIFAS cada 2-3 meses.
-// Fuente oficial: https://www.correoargentino.com.ar/tarifas
 // ============================================================
 
 export interface DatosEnvio {
- codigoPostal: string;
- ciudad: string;
- provincia: string;
- pesoKg?: number; // default 0.5 kg (taza individual)
+  codigoPostal: string;
+  ciudad:       string;
+  provincia:    string;
+  pesoKg?:      number;
 }
 
 export interface OpcionEnvio {
- id: string;
- nombre: string;
- descripcion: string;
- precio: number; // ARS
- diasMin: number;
- diasMax: number;
- seguimiento: boolean;
- gratis: boolean;
- nota?: string;
+  id:           string;
+  nombre:       string;
+  descripcion:  string;
+  precio:       number;
+  diasMin:      number;
+  diasMax:      number;
+  seguimiento:  boolean;
+  gratis:       boolean;
+  nota?:        string;
 }
 
 // ── ZONAS ─────────────────────────────────────────────────
-// Zona local: Valle de Punilla y Capital Córdoba
 function esLocal(cp: string, ciudad: string): boolean {
- const n = parseInt(cp, 10);
- const c = ciudad.toLowerCase();
- return (
- (n >= 5000 && n <= 5009) || // Ciudad de Córdoba
- (n >= 5150 && n <= 5196) || // Valle de Punilla (Carlos Paz, Cosquín, La Falda…)
- c.includes('carlos paz') ||
- c.includes('cosquín') ||
- c.includes('la falda') ||
- c.includes('tanti') ||
- c.includes('icho cruz') ||
- c.includes('bialet') ||
- c.includes('córdoba') ||
- c.includes('cordoba')
- );
+  const n = parseInt(cp, 10);
+  const c = ciudad.toLowerCase();
+  return (
+    (n >= 5000 && n <= 5009) ||
+    (n >= 5150 && n <= 5196) ||
+    c.includes('carlos paz') ||
+    c.includes('cosquín') ||
+    c.includes('la falda') ||
+    c.includes('tanti') ||
+    c.includes('icho cruz') ||
+    c.includes('bialet') ||
+    c.includes('córdoba') ||
+    c.includes('cordoba')
+  );
 }
 
 function esProvinciaCordoba(provincia: string): boolean {
- return provincia.toLowerCase().includes('córdoba') ||
- provincia.toLowerCase().includes('cordoba');
+  return provincia.toLowerCase().includes('córdoba') ||
+         provincia.toLowerCase().includes('cordoba');
 }
 
 function esGBA(cp: string): boolean {
- const n = parseInt(cp, 10);
- return (n >= 1000 && n <= 1999) || (n >= 1400 && n <= 1499);
+  const n = parseInt(cp, 10);
+  return (n >= 1000 && n <= 1999) || (n >= 1400 && n <= 1499);
 }
 
-// ── TARIFAS CORREO ARGENTINO (ARS, Abril 2026) ────────────
-// Basadas en servicio "Encomienda Clásica" y "Encomienda Prioritaria"
-// Peso promedio caja cerámica: 0.5–1.5 kg
+// ── TARIFAS CORREO ARGENTINO — Junio 2026 ─────────────────
+// FIX 2: precios actualizados por Ignacio
+// a sucursal más cercana: $9.000
+// a domicilio:            $13.000
 const TARIFAS = {
- local: {
- clasico: 3200,
- prioritario:4100,
- },
- cordoba: {
- clasico: 4200,
- prioritario:5400,
- },
- gba: {
- clasico: 6800,
- prioritario:8500,
- },
- nacional: {
- clasico: 7200,
- prioritario:9000,
- },
+  aSucursal: 9000,   // a sucursal más cercana (cualquier zona)
+  aDomicilio: 13000, // a domicilio (cualquier zona)
 };
 
-// Ajuste por peso extra (encima de 1 kg)
-function ajustePeso(baseKg: number, pesoKg: number): number {
- if (pesoKg <= baseKg) return 0;
- const extra = pesoKg - baseKg;
- return Math.round(extra * 1200); // ~$1.200 por kg extra
-}
+// ── PRECIOS POR KG (placeholder hasta que Ignacio confirme) ─
+// FIX 4: nueva modalidad por peso
+// Ignacio debe confirmar los precios reales. Por ahora 3 tramos.
+const TARIFAS_KG = {
+  hasta1kg:  9000,   // ← confirmar con Ignacio
+  hasta3kg:  11000,  // ← confirmar con Ignacio
+  hasta5kg:  14000,  // ← confirmar con Ignacio
+};
 
-// ── COTIZADOR ─────────────────────────────────────────────
-export async function cotizarEnvio(datos: DatosEnvio): Promise<OpcionEnvio[]> {
- const { codigoPostal, ciudad, provincia, pesoKg = 0.5 } = datos;
+// ── FUNCIÓN PRINCIPAL ─────────────────────────────────────
+export function cotizarEnvio(datos: DatosEnvio): OpcionEnvio[] {
+  const { codigoPostal, ciudad, provincia } = datos;
+  if (!codigoPostal || codigoPostal.length < 4) return [];
 
- const local = esLocal(codigoPostal, ciudad);
- const cordoba = !local && esProvinciaCordoba(provincia);
- const gba = !local && !cordoba && esGBA(codigoPostal);
+  const local    = esLocal(codigoPostal, ciudad);
+  const cordoba  = esProvinciaCordoba(provincia);
 
- const t = local ? TARIFAS.local : cordoba ? TARIFAS.cordoba : gba ? TARIFAS.gba : TARIFAS.nacional;
- const extra = ajustePeso(0.5, pesoKg);
+  const opciones: OpcionEnvio[] = [
+    // Retiro en Carlos Paz — siempre gratis
+    {
+      id:          'retiro-local',
+      nombre:      'Retiro en Carlos Paz',
+      descripcion: 'Retirá en nuestro taller de Villa Carlos Paz. Coordinamos día y horario por WhatsApp.',
+      precio:      0,
+      diasMin:     1,
+      diasMax:     3,
+      seguimiento: false,
+      gratis:      true,
+      nota:        'Coordinamos día y horario por WhatsApp',
+    },
 
- const opciones: OpcionEnvio[] = [];
+    // FIX 2: A sucursal más cercana — precio único $9.000
+    {
+      id:          'correo-sucursal',
+      nombre:      'Correo Argentino — Sucursal',
+      descripcion: local ? 'Envío a sucursal más cercana de Carlos Paz / Córdoba.' : 'Envío a la sucursal de Correo Argentino más cercana a tu domicilio.',
+      precio:      TARIFAS.aSucursal,
+      diasMin:     local ? 2 : cordoba ? 3 : 5,
+      diasMax:     local ? 4 : cordoba ? 6 : 10,
+      seguimiento: true,
+      gratis:      false,
+      nota:        'Retirás en la sucursal de Correo Argentino más cercana a tu domicilio',
+    },
 
- // 1. Retiro en el taller — siempre disponible y gratis
- opciones.push({
- id: 'retiro',
- nombre: 'Retiro en Carlos Paz',
- descripcion: 'Pasás a buscar por nuestro taller',
- precio: 0,
- diasMin: 0,
- diasMax: 2,
- seguimiento: false,
- gratis: true,
- nota: 'Coordinamos día y horario por WhatsApp antes de que vengas',
- });
+    // FIX 2: A domicilio — precio único $13.000
+    {
+      id:          'correo-domicilio',
+      nombre:      'Correo Argentino — Domicilio',
+      descripcion: 'Lo recibís directamente en la puerta de tu casa.',
+      precio:      TARIFAS.aDomicilio,
+      diasMin:     local ? 3 : cordoba ? 4 : 7,
+      diasMax:     local ? 5 : cordoba ? 7 : 12,
+      seguimiento: true,
+      gratis:      false,
+    },
 
- // 2. Correo Argentino — Encomienda Clásica
- opciones.push({
- id: 'correo-clasico',
- nombre: 'Correo Argentino Clásico',
- descripcion: 'Encomienda con número de seguimiento',
- precio: t.clasico + extra,
- diasMin: local ? 3 : cordoba ? 4 : gba ? 6 : 7,
- diasMax: local ? 6 : cordoba ? 8 : gba ? 10 : 14,
- seguimiento: true,
- gratis: false,
- nota: 'Seguimiento en correoweb.com.ar',
- });
+    // FIX 4: Envío por peso — 3 tramos (precios provisorios hasta confirmar con Ignacio)
+    {
+      id:          'correo-por-peso-1',
+      nombre:      'Envío por peso — hasta 1 kg',
+      descripcion: 'Para pedidos de hasta 1 kg (ej: 1-2 tazas). Precio provisorio, confirmar con Ignacio.',
+      precio:      TARIFAS_KG.hasta1kg,
+      diasMin:     local ? 2 : cordoba ? 3 : 5,
+      diasMax:     local ? 5 : cordoba ? 7 : 12,
+      seguimiento: true,
+      gratis:      false,
+      nota:        'Precio a confirmar — provisorio',
+    },
+    {
+      id:          'correo-por-peso-3',
+      nombre:      'Envío por peso — hasta 3 kg',
+      descripcion: 'Para pedidos medianos (ej: set de 3-4 piezas). Precio provisorio, confirmar con Ignacio.',
+      precio:      TARIFAS_KG.hasta3kg,
+      diasMin:     local ? 2 : cordoba ? 3 : 5,
+      diasMax:     local ? 5 : cordoba ? 7 : 12,
+      seguimiento: true,
+      gratis:      false,
+      nota:        'Precio a confirmar — provisorio',
+    },
+    {
+      id:          'correo-por-peso-5',
+      nombre:      'Envío por peso — hasta 5 kg',
+      descripcion: 'Para pedidos grandes (ej: 5+ piezas o tazones). Precio provisorio, confirmar con Ignacio.',
+      precio:      TARIFAS_KG.hasta5kg,
+      diasMin:     local ? 2 : cordoba ? 3 : 5,
+      diasMax:     local ? 5 : cordoba ? 7 : 12,
+      seguimiento: true,
+      gratis:      false,
+      nota:        'Precio a confirmar — provisorio',
+    },
+  ];
 
- // 3. Correo Argentino — Encomienda Prioritaria
- opciones.push({
- id: 'correo-prioritario',
- nombre: 'Correo Argentino Prioritario',
- descripcion: 'Entrega más rápida con prioridad',
- precio: t.prioritario + extra,
- diasMin: local ? 1 : cordoba ? 2 : gba ? 3 : 4,
- diasMax: local ? 3 : cordoba ? 4 : gba ? 6 : 8,
- seguimiento: true,
- gratis: false,
- nota: 'Recomendado para regalos con fecha',
- });
-
- return opciones;
-}
-
-export function textoEntrega(min: number, max: number): string {
- if (min === 0 && max === 0) return 'A coordinar';
- if (min === 0) return `Hasta ${max} días hábiles`;
- if (min === max) return `${min} días hábiles`;
- return `${min} a ${max} días hábiles`;
+  return opciones;
 }
 
 export function formatearPrecioEnvio(precio: number): string {
- if (precio === 0) return 'Gratis';
- return new Intl.NumberFormat('es-AR', {
- style: 'currency', currency: 'ARS', minimumFractionDigits: 0,
- }).format(precio);
+  if (precio === 0) return 'Gratis';
+  return new Intl.NumberFormat('es-AR', {
+    style:    'currency',
+    currency: 'ARS',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(precio);
 }
