@@ -130,7 +130,7 @@ export default function SelectorEnvio({ codigoPostal, ciudad, provincia, onChang
  )}
  <p className="font-sans text-xs text-tierra-400 mt-1 flex items-center gap-1">
  <PackageCheck className="w-3 h-3" />
- {textoEntrega(op.diasMin, op.diasMax)}
+ {textoEntrega(op, op.diasMin, op.diasMax)}
  {op.seguimiento && ' · con seguimiento'}
  </p>
  </div>

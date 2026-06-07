@@ -67,7 +67,7 @@ const TARIFAS = {
 // FIX 4: nueva modalidad por peso
 // Ignacio debe confirmar los precios reales. Por ahora 3 tramos.
 const TARIFAS_KG = {
-  hasta1kg:  9000,   // ← confirmar con Ignacio
+  hasta1kg:  9000,   // ← precio provisorio para hasta 1 kg
   hasta3kg:  11000,  // ← confirmar con Ignacio
   hasta5kg:  14000,  // ← confirmar con Ignacio
 };
@@ -166,4 +166,23 @@ export function formatearPrecioEnvio(precio: number): string {
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   }).format(precio);
+}
+
+// Corrección: ahora acepta diasMin y diasMax opcionales y los incluye en el texto
+export function textoEntrega(opcion: OpcionEnvio, diasMin?: number, diasMax?: number): string {
+  const rango = (diasMin !== undefined && diasMax !== undefined) ? ` · ${diasMin} a ${diasMax} días` : '';
+  switch (opcion.id) {
+    case 'correo-sucursal':
+      return `Envío a sucursal${rango}`;
+    case 'correo-domicilio':
+      return `Envío a domicilio${rango}`;
+    case 'correo-por-peso-1':
+      return `Envío por peso (hasta 1 kg)${rango}`;
+    case 'correo-por-peso-3':
+      return `Envío por peso (hasta 3 kg)${rango}`;
+    case 'correo-por-peso-5':
+      return `Envío por peso (hasta 5 kg)${rango}`;
+    default:
+      return opcion.nombre + rango;
+  }
 }
