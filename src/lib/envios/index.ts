@@ -49,22 +49,13 @@ function esProvinciaCordoba(provincia: string): boolean {
          provincia.toLowerCase().includes('cordoba');
 }
 
-function esGBA(cp: string): boolean {
-  const n = parseInt(cp, 10);
-  return (n >= 1000 && n <= 1999) || (n >= 1400 && n <= 1499);
-}
-
 // ── TARIFAS CORREO ARGENTINO — Junio 2026 ─────────────────
-// FIX 2: precios actualizados por Ignacio
-// a sucursal más cercana: $9.000
-// a domicilio:            $13.000
 const TARIFAS = {
   aSucursal: 9000,
   aDomicilio: 13000,
 };
 
 // ── PRECIOS POR KG (placeholder hasta que Ignacio confirme) ─
-// FIX 4: nueva modalidad por peso
 const TARIFAS_KG = {
   hasta1kg:  9000,
   hasta3kg:  11000,
