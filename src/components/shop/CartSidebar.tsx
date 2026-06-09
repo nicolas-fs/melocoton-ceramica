@@ -12,8 +12,6 @@ export default function CartSidebar() {
     subtotal, total, cantidadTotal,
   } = useCarrito();
 
-  // Calcula el cargo adicional por volumen:
-  // cada 4 piezas (de cualquier producto) suman $6.000 al envío
   const bultosCada4 = Math.floor(cantidadTotal / 4);
   const cargoVolumen = bultosCada4 * 6000;
 
@@ -102,4 +100,73 @@ export default function CartSidebar() {
                   </div>
                   <button
                     onClick={() => quitarItem(item.productoId)}
-                    className="self-
+                    className="self-start p-1 rounded hover:bg-red-50 text-tierra-300 hover:text-red-400 transition-colors"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
+        {/* Footer */}
+        {items.length > 0 && (
+          <div className="px-5 py-4 border-t border-melocoton-200 bg-white space-y-3">
+
+            {/* Aviso amarillo: aparece cuando hay 4+ piezas en el carrito */}
+            {bultosCada4 > 0 && (
+              <div className="flex items-start gap-2 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2.5">
+                <svg
+                  className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5"
+                  viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+                >
+                  <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                  <line x1="12" y1="9" x2="12" y2="13"/>
+                  <line x1="12" y1="17" x2="12.01" y2="17"/>
+                </svg>
+                <p className="text-xs text-amber-700 leading-snug">
+                  Con {cantidadTotal} piezas, el envío aumenta{' '}
+                  <span className="font-semibold">
+                    +{formatearPrecio(cargoVolumen)}
+                  </span>{' '}
+                  (cada 4 piezas suma $6.000 al envío).
+                </p>
+              </div>
+            )}
+
+            <div className="space-y-1.5 text-sm font-sans">
+              <div className="flex justify-between text-tierra-600">
+                <span>Subtotal</span>
+                <span>{formatearPrecio(subtotal)}</span>
+              </div>
+              <div className="flex justify-between text-tierra-600">
+                <span>Envío</span>
+                <span className="text-tierra-400 text-xs">Se calcula en el checkout</span>
+              </div>
+              <div className="flex justify-between font-semibold text-tierra-900 text-base pt-2 border-t border-melocoton-100">
+                <span>Total</span>
+                <span className="font-serif text-lg">{formatearPrecio(total)}</span>
+              </div>
+            </div>
+
+            <Link
+              href="/checkout"
+              onClick={cerrarCarrito}
+              className="btn-primary w-full text-center"
+            >
+              Finalizar compra
+            </Link>
+            <button
+              onClick={cerrarCarrito}
+              className="w-full text-center text-sm text-tierra-500 hover:text-tierra-700 font-sans transition-colors py-1"
+            >
+              Seguir comprando
+            </button>
+          </div>
+        )}
+      </aside>
+    </>
+  );
+}
