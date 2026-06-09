@@ -51,15 +51,8 @@ function esProvinciaCordoba(provincia: string): boolean {
 
 // ── TARIFAS CORREO ARGENTINO — Junio 2026 ─────────────────
 const TARIFAS = {
-  aSucursal: 9000,
-  aDomicilio: 13000,
-};
-
-// ── PRECIOS POR KG (placeholder hasta que Ignacio confirme) ─
-const TARIFAS_KG = {
-  hasta1kg:  9000,
-  hasta3kg:  11000,
-  hasta5kg:  14000,
+  aSucursal:  10000,
+  aDomicilio: 15000,
 };
 
 // ── FUNCIÓN PRINCIPAL ─────────────────────────────────────
@@ -67,10 +60,10 @@ export function cotizarEnvio(datos: DatosEnvio): OpcionEnvio[] {
   const { codigoPostal, ciudad, provincia } = datos;
   if (!codigoPostal || codigoPostal.length < 4) return [];
 
-  const local    = esLocal(codigoPostal, ciudad);
-  const cordoba  = esProvinciaCordoba(provincia);
+  const local   = esLocal(codigoPostal, ciudad);
+  const cordoba = esProvinciaCordoba(provincia);
 
-  const opciones: OpcionEnvio[] = [
+  return [
     {
       id:          'retiro-local',
       nombre:      'Retiro en Carlos Paz',
@@ -85,7 +78,9 @@ export function cotizarEnvio(datos: DatosEnvio): OpcionEnvio[] {
     {
       id:          'correo-sucursal',
       nombre:      'Correo Argentino — Sucursal',
-      descripcion: local ? 'Envío a sucursal más cercana de Carlos Paz / Córdoba.' : 'Envío a la sucursal de Correo Argentino más cercana a tu domicilio.',
+      descripcion: local
+        ? 'Envío a sucursal más cercana de Carlos Paz / Córdoba.'
+        : 'Envío a la sucursal de Correo Argentino más cercana a tu domicilio.',
       precio:      TARIFAS.aSucursal,
       diasMin:     local ? 2 : cordoba ? 3 : 5,
       diasMax:     local ? 4 : cordoba ? 6 : 10,
@@ -103,69 +98,26 @@ export function cotizarEnvio(datos: DatosEnvio): OpcionEnvio[] {
       seguimiento: true,
       gratis:      false,
     },
-    {
-      id:          'correo-por-peso-1',
-      nombre:      'Envío por peso — hasta 1 kg',
-      descripcion: 'Para pedidos de hasta 1 kg (ej: 1-2 tazas). Precio provisorio, confirmar con Ignacio.',
-      precio:      TARIFAS_KG.hasta1kg,
-      diasMin:     local ? 2 : cordoba ? 3 : 5,
-      diasMax:     local ? 5 : cordoba ? 7 : 12,
-      seguimiento: true,
-      gratis:      false,
-      nota:        'Precio a confirmar — provisorio',
-    },
-    {
-      id:          'correo-por-peso-3',
-      nombre:      'Envío por peso — hasta 3 kg',
-      descripcion: 'Para pedidos medianos (ej: set de 3-4 piezas). Precio provisorio, confirmar con Ignacio.',
-      precio:      TARIFAS_KG.hasta3kg,
-      diasMin:     local ? 2 : cordoba ? 3 : 5,
-      diasMax:     local ? 5 : cordoba ? 7 : 12,
-      seguimiento: true,
-      gratis:      false,
-      nota:        'Precio a confirmar — provisorio',
-    },
-    {
-      id:          'correo-por-peso-5',
-      nombre:      'Envío por peso — hasta 5 kg',
-      descripcion: 'Para pedidos grandes (ej: 5+ piezas o tazones). Precio provisorio, confirmar con Ignacio.',
-      precio:      TARIFAS_KG.hasta5kg,
-      diasMin:     local ? 2 : cordoba ? 3 : 5,
-      diasMax:     local ? 5 : cordoba ? 7 : 12,
-      seguimiento: true,
-      gratis:      false,
-      nota:        'Precio a confirmar — provisorio',
-    },
   ];
-
-  return opciones;
 }
 
 export function formatearPrecioEnvio(precio: number): string {
   if (precio === 0) return 'Gratis';
   return new Intl.NumberFormat('es-AR', {
-    style:    'currency',
-    currency: 'ARS',
+    style:                'currency',
+    currency:             'ARS',
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   }).format(precio);
 }
 
-// CORREGIDO: acepta OpcionEnvio y opcionalmente días
 export function textoEntrega(opcion: OpcionEnvio, diasMin?: number, diasMax?: number): string {
-  const rango = (diasMin !== undefined && diasMax !== undefined) ? ` · ${diasMin} a ${diasMax} días` : '';
+  const rango = (diasMin !== undefined && diasMax !== undefined)
+    ? ` · ${diasMin} a ${diasMax} días`
+    : '';
   switch (opcion.id) {
-    case 'correo-sucursal':
-      return `Envío a sucursal${rango}`;
-    case 'correo-domicilio':
-      return `Envío a domicilio${rango}`;
-    case 'correo-por-peso-1':
-      return `Envío por peso (hasta 1 kg)${rango}`;
-    case 'correo-por-peso-3':
-      return `Envío por peso (hasta 3 kg)${rango}`;
-    case 'correo-por-peso-5':
-      return `Envío por peso (hasta 5 kg)${rango}`;
-    default:
-      return opcion.nombre + rango;
+    case 'correo-sucursal':  return `Envío a sucursal${rango}`;
+    case 'correo-domicilio': return `Envío a domicilio${rango}`;
+    default:                 return opcion.nombre + rango;
   }
 }
