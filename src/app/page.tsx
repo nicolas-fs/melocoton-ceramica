@@ -132,7 +132,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ── INSTAGRAM ────────────────────────────────── */}
+{/* ── INSTAGRAM ────────────────────────────────── */}
       <section className="py-14 bg-white border-t border-melocoton-100">
         <div className="container-mel px-4 text-center">
           <p className="font-sans text-sm text-tierra-500 mb-2">¿Querés ver el proceso en vivo?</p>
