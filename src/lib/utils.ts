@@ -5,7 +5,7 @@
 // IMPORTANTE: Cambiá este número por el WhatsApp real de Melocotón Cerámica
 // Formato: 549 + código de área sin 0 + número sin 15
 // Ejemplo Carlos Paz (0354) → 5493542XXXXXXX
-export const WHATSAPP_NUMERO = '5493541000000'; // ← CAMBIAR ANTES DE PUBLICAR
+export const WHATSAPP_NUMERO = '5493541209666'; // ← CAMBIAR ANTES DE PUBLICAR
 
 export function getLinkWhatsApp(mensaje: string): string {
  return `https://wa.me/${WHATSAPP_NUMERO}?text=${encodeURIComponent(mensaje)}`;
