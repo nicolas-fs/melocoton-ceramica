@@ -123,7 +123,7 @@ export default async function HomePage() {
         <div className="container-mel px-4 text-center">
           <p className="font-sans text-sm text-tierra-500 mb-2">Queres ver el proceso en vivo?</p>
           <h2 className="font-serif text-2xl md:text-3xl text-tierra-900 mb-6">Seguinos en Instagram</h2>
-          <a
+          
             href="https://instagram.com/melocoton.ceramica"
             target="_blank"
             rel="noopener noreferrer"
