@@ -64,15 +64,15 @@ export default function Navbar() {
           <button
             onClick={() => setDrawerOpen(true)}
             className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-melocoton-100 transition-colors flex-shrink-0"
-            aria-label="Abrir menú"
+            aria-label="Abrir menu"
           >
             <Menu className="w-5 h-5 text-tierra-700" />
           </button>
 
-          <Link href="/" className="absolute left-1/2 -translate-x-1/2" aria-label="Melocotón Cerámica">
+          <Link href="/" className="absolute left-1/2 -translate-x-1/2" aria-label="Melocoton Ceramica">
             <Image
               src="/logotipo.jpg"
-              alt="Melocotón Cerámica Artesanal"
+              alt="Melocoton Ceramica Artesanal"
               width={120}
               height={120}
               className="h-16 md:h-20 w-auto object-contain rounded-full"
@@ -92,7 +92,7 @@ export default function Navbar() {
             <button
               onClick={abrirCarrito}
               className="relative w-10 h-10 flex items-center justify-center rounded-full hover:bg-melocoton-100 transition-colors"
-              aria-label={`Carrito (${cantidadTotal} items)`}
+              aria-label="Carrito"
             >
               <ShoppingBag className="w-5 h-5 text-tierra-700" />
               {cantidadTotal > 0 && (
@@ -118,7 +118,7 @@ export default function Navbar() {
         <div className="flex items-center justify-between p-5 border-b border-melocoton-200">
           <Image
             src="/logotipo.jpg"
-            alt="Melocotón Cerámica"
+            alt="Melocoton Ceramica"
             width={64}
             height={64}
             className="h-16 w-auto object-contain rounded-full"
@@ -150,7 +150,7 @@ export default function Navbar() {
 
         <div className="p-5 border-t border-melocoton-200">
           <p className="font-sans text-xs text-tierra-400 text-center">
-            @melocoton.ceramica · Villa Carlos Paz, Córdoba
+            @melocoton.ceramica - Villa Carlos Paz, Cordoba
           </p>
         </div>
       </aside>
@@ -171,7 +171,7 @@ export default function Navbar() {
                 type="text"
                 value={query}
                 onChange={e => setQuery(e.target.value)}
-                placeholder="Buscar piezas... (ej: taza, mate, bowl)"
+                placeholder="Buscar piezas..."
                 className="flex-1 font-sans text-base text-tierra-900 placeholder:text-tierra-400 bg-transparent outline-none"
                 autoComplete="off"
               />
@@ -187,7 +187,7 @@ export default function Navbar() {
             </form>
             <div className="px-5 pb-4 border-t border-melocoton-100 pt-3">
               <p className="font-sans text-xs text-tierra-400">
-                Presioná Enter para buscar en el catálogo completo
+                Presiona Enter para buscar en el catalogo completo
               </p>
               <div className="flex flex-wrap gap-2 mt-3">
                 {['Tazas con frases', 'Mates', 'Sets regalo', 'Tazones XL', 'Personalizados'].map(tag => (
