@@ -17,15 +17,12 @@ export default async function HomePage() {
 
   const hayPromos = todos.some(p => p.enPromocion);
   const cantidadPromos = todos.filter(p => p.enPromocion).length;
-  const textoPromo = cantidadPromos === 1
-    ? cantidadPromos + ' producto con descuento'
-    : cantidadPromos + ' productos con descuento';
 
   return (
     <>
       {hayPromos && (
         <PromoBanner
-          mensaje={textoPromo}
+          mensaje={`${cantidadPromos} ${cantidadPromos === 1 ? 'producto con descuento' : 'productos con descuento'}`}
           enlace="/catalogo?promo=true"
           etiqueta="Ver ofertas"
         />
@@ -87,7 +84,7 @@ export default async function HomePage() {
               <h2 className="section-title">Galeria</h2>
             </div>
             <Link href="/galeria" className="font-sans text-sm text-melocoton-600 hover:text-melocoton-700 font-medium">
-              Ver galeria completa
+              Ver galeria completa ({GALERIA.length} fotos)
             </Link>
           </div>
           <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-2 mb-8">
@@ -126,7 +123,7 @@ export default async function HomePage() {
         <div className="container-mel px-4 text-center">
           <p className="font-sans text-sm text-tierra-500 mb-2">Queres ver el proceso en vivo?</p>
           <h2 className="font-serif text-2xl md:text-3xl text-tierra-900 mb-6">Seguinos en Instagram</h2>
-          
+          <a
             href="https://instagram.com/melocoton.ceramica"
             target="_blank"
             rel="noopener noreferrer"
