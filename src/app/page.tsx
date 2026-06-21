@@ -55,3 +55,64 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+      <section className="py-20 bg-white">
+        <div className="container-mel px-4">
+          <div className="text-center mb-12">
+            <p className="font-sans text-xs tracking-widest text-melocoton-500 uppercase mb-3">Lo que dicen</p>
+            <h2 className="section-title">Palabras de quienes ya tienen su pieza</h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {TESTIMONIOS.map((t, i) => (
+              <blockquote key={i} className="bg-melocoton-50 rounded-2xl p-6 shadow-sm border border-melocoton-100 flex flex-col gap-4">
+                <p className="font-serif text-base text-tierra-700 leading-relaxed italic flex-1">"{t.texto}"</p>
+                <footer className="font-sans text-xs text-tierra-400">
+                  <span className="font-medium text-tierra-600">{t.nombre}</span> - {t.ciudad}
+                </footer>
+              </blockquote>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-20 bg-melocoton-50 border-t border-melocoton-100">
+        <div className="container-mel px-4">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
+            <div>
+              <p className="font-sans text-xs tracking-widest text-melocoton-500 uppercase mb-3">Nuestras piezas</p>
+              <h2 className="section-title">Galeria</h2>
+            </div>
+            <Link href="/galeria" className="font-sans text-sm text-melocoton-600 hover:text-melocoton-700 font-medium">
+              Ver galeria completa ({GALERIA.length} fotos)
+            </Link>
+          </div>
+          <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-2 mb-8">
+            {GALERIA.slice(0, 12).map((img, i) => (
+              <Link key={i} href="/galeria" className="relative aspect-square rounded-xl overflow-hidden bg-melocoton-100 group">
+                <img
+                  src={img.url}
+                  alt="Galeria Melocoton Ceramica"
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-tierra-900/0 group-hover:bg-tierra-900/30 transition-all duration-300" />
+              </Link>
+            ))}
+          </div>
+          <div className="text-center">
+            <Link href="/galeria" className="btn-primary px-8 py-3">Ver galeria completa</Link>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-16 bg-tierra-800">
+        <div className="container-mel px-4 text-center">
+          <p className="font-sans text-xs tracking-widest text-melocoton-400 uppercase mb-3">Para empresas y emprendedores</p>
+          <h2 className="font-serif text-3xl md:text-4xl text-white mb-4">Compras por mayor?</h2>
+          <p className="font-serif italic text-tierra-300 text-lg mb-8 max-w-xl mx-auto">
+            Tenemos precios especiales para locales, gastronomia, regalos corporativos y reventa.
+          </p>
+          <Link href="/mayorista" className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-melocoton-400 text-white font-sans font-medium text-base hover:bg-melocoton-500 transition-colors">
+            Ver precios mayoristas
+          </Link>
+        </div>
+      </section>
