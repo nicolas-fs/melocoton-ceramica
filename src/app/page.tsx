@@ -17,12 +17,15 @@ export default async function HomePage() {
 
   const hayPromos = todos.some(p => p.enPromocion);
   const cantidadPromos = todos.filter(p => p.enPromocion).length;
+  const textoPromo = cantidadPromos === 1
+    ? cantidadPromos + ' producto con descuento'
+    : cantidadPromos + ' productos con descuento';
 
   return (
     <>
       {hayPromos && (
         <PromoBanner
-          mensaje={`${cantidadPromos} ${cantidadPromos === 1 ? 'producto con descuento' : 'productos con descuento'}`}
+          mensaje={textoPromo}
           enlace="/catalogo?promo=true"
           etiqueta="Ver ofertas"
         />
@@ -84,7 +87,7 @@ export default async function HomePage() {
               <h2 className="section-title">Galeria</h2>
             </div>
             <Link href="/galeria" className="font-sans text-sm text-melocoton-600 hover:text-melocoton-700 font-medium">
-              Ver galeria completa ({GALERIA.length} fotos)
+              Ver galeria completa
             </Link>
           </div>
           <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-2 mb-8">
