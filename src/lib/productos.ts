@@ -35,6 +35,7 @@ export async function obtenerProductos(filtros?: {
   categoria?: Categoria;
   destacado?: boolean;
   busqueda?: string;
+  limite?: number;
 }): Promise<Producto[]> {
   const where: any = {};
   if (filtros?.categoria) where.categoria = filtros.categoria;
@@ -46,7 +47,11 @@ export async function obtenerProductos(filtros?: {
       { descripcionCorta:{ contains: q, mode: 'insensitive' } },
     ];
   }
-  const rows = await prisma.producto.findMany({ where, orderBy: { creadoEn: 'desc' } });
+  const rows = await prisma.producto.findMany({
+    where,
+    orderBy: { creadoEn: 'desc' },
+    take: filtros?.limite,
+  });
   return rows.map(mapPrismaToProducto);
 }
 
