@@ -12,7 +12,7 @@ export const dynamic = 'force-dynamic';
 export default async function HomePage() {
   const [todos, destacados] = await Promise.all([
     obtenerProductos({ limite: 8 }),
-    obtenerProductos({ destacado: true, limite: 4 }),
+    obtenerProductos({ destacado: true, limite: 6 }),
   ]);
   const hayPromos = todos.some(p => p.enPromocion);
   const cantidadPromos = todos.filter(p => p.enPromocion).length;
