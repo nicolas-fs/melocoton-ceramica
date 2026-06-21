@@ -116,3 +116,20 @@ export default async function HomePage() {
           </Link>
         </div>
       </section>
+      <section className="py-14 bg-white border-t border-melocoton-100">
+        <div className="container-mel px-4 text-center">
+          <p className="font-sans text-sm text-tierra-500 mb-2">Queres ver el proceso en vivo?</p>
+          <h2 className="font-serif text-2xl md:text-3xl text-tierra-900 mb-6">Seguinos en Instagram</h2>
+          
+            href="https://instagram.com/melocoton.ceramica"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-3 px-8 py-4 rounded-full bg-gradient-to-r from-purple-500 via-pink-500 to-orange-400 text-white font-sans font-medium text-base hover:opacity-90 transition-opacity shadow-md"
+          >
+            <Instagram className="w-5 h-5" /> @melocoton.ceramica
+          </a>
+        </div>
+      </section>
+    </>
+  );
+}
