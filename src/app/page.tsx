@@ -29,7 +29,8 @@ export default async function HomePage() {
       )}
 
       <HeroGrid />
-<section id="catalogo" className="py-20 bg-melocoton-50">
+
+      <section id="catalogo" className="py-20 bg-melocoton-50">
         <div className="container-mel px-4">
           <div className="text-center mb-12">
             <p className="font-sans text-xs tracking-widest text-melocoton-500 uppercase mb-3">Lo que tenemos</p>
@@ -55,6 +56,7 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
       <section className="py-20 bg-white">
         <div className="container-mel px-4">
           <div className="text-center mb-12">
@@ -116,6 +118,7 @@ export default async function HomePage() {
           </Link>
         </div>
       </section>
+
       <section className="py-14 bg-white border-t border-melocoton-100">
         <div className="container-mel px-4 text-center">
           <p className="font-sans text-sm text-tierra-500 mb-2">Queres ver el proceso en vivo?</p>
