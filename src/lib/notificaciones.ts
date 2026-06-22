@@ -14,6 +14,7 @@
 //   RESEND_API_KEY=re_XXXXXXXX
 //   EMAIL_FROM=pedidos@melocotonceramica.com.ar  ← dominio verificado en Resend
 //   EMAIL_ADMIN=tu@email.com                     ← donde recibís copia del pedido
+//   ADMIN_WHATSAPP=549XXXXXXXXXX   ← numero real de WhatsApp de contacto (distinto al bot)
 // ============================================================
 
 import { Pedido } from '@/types';
@@ -37,8 +38,6 @@ function nombreEstado(estado: string): string {
 }
 
 // ── 1. WHATSAPP A LA ARTESANA ─────────────────────────────
-// Recibe el mensaje en su celular con todo lo que necesita
-// para armar y despachar el paquete.
 
 export async function enviarWhatsAppArtesana(pedido: Pedido): Promise<void> {
   const phone  = process.env.CALLMEBOT_PHONE;
@@ -46,14 +45,12 @@ export async function enviarWhatsAppArtesana(pedido: Pedido): Promise<void> {
 
   if (!phone || !apikey) {
     console.log('[WhatsApp] Sin configurar. Para activar:\n  1. Guardá +34 644 44 17 19 como CallMeBot\n  2. Mandales: "I allow callmebot to send me messages"\n  3. Agregá CALLMEBOT_PHONE y CALLMEBOT_APIKEY al .env.local');
-    // Imprimir en consola igual para que se vea en los logs de Vercel
     _logPedidoConsola(pedido);
     return;
   }
 
   const idCorto = pedido.id.slice(-6).toUpperCase();
 
-  // Lista de piezas a armar — el corazón del mensaje
   const piezas = pedido.items
     .map(i => `  📦 ${i.titulo}\n     Cantidad: *${i.cantidad}*\n     Precio unitario: ${formatearPrecio(i.precioUnitario)}`)
     .join('\n\n');
@@ -104,8 +101,6 @@ export async function enviarWhatsAppArtesana(pedido: Pedido): Promise<void> {
     console.error('[WhatsApp] Error de red:', err.message);
   }
 
-  // Enviar copia al WhatsApp del dueño (ADMIN_WHATSAPP)
-  // Diferente al CALLMEBOT_PHONE que puede ser cualquier número
   const adminPhone = process.env.ADMIN_WHATSAPP;
   if (adminPhone && adminPhone !== phone) {
     const resumenAdmin = [
@@ -124,8 +119,6 @@ export async function enviarWhatsAppArtesana(pedido: Pedido): Promise<void> {
 }
 
 // ── 2. EMAIL DE COMPROBANTE AL CLIENTE ────────────────────
-// HTML bonito con los colores de la marca, número de pedido,
-// resumen de compra y próximos pasos.
 
 export async function enviarEmailComprobante(pedido: Pedido): Promise<void> {
   const apiKey    = process.env.RESEND_API_KEY;
@@ -133,14 +126,13 @@ export async function enviarEmailComprobante(pedido: Pedido): Promise<void> {
   const emailAdmin = process.env.EMAIL_ADMIN;
 
   if (!apiKey) {
-    console.log('[Email] RESEND_API_KEY no configurada. Para activar:\n  1. Registrate en resend.com (gratis)\n  2. Verificá tu dominio\n  3. Agregá RESEND_API_KEY al .env.local');
+    console.log('[Email] RESEND_API_KEY no configurada.');
     return;
   }
 
   const idCorto = pedido.id.slice(-6).toUpperCase();
   const html    = generarHTMLComprobante(pedido, idCorto);
 
-  // a) Email al cliente con su comprobante
   const payloadCliente = {
     from:    emailFrom,
     to:      pedido.cliente.email,
@@ -149,7 +141,6 @@ export async function enviarEmailComprobante(pedido: Pedido): Promise<void> {
     reply_to: emailAdmin ?? emailFrom,
   };
 
-  // b) Copia interna para la artesana (sin el HTML bonito, solo los datos)
   const payloadAdmin = emailAdmin ? {
     from:    emailFrom,
     to:      emailAdmin,
@@ -163,7 +154,6 @@ export async function enviarEmailComprobante(pedido: Pedido): Promise<void> {
       'Authorization': `Bearer ${apiKey}`,
     };
 
-    // Enviar ambos en paralelo
     const promesas = [
       fetch('https://api.resend.com/emails', {
         method:  'POST',
@@ -203,6 +193,10 @@ export async function enviarEmailComprobante(pedido: Pedido): Promise<void> {
 // ── HTML COMPROBANTE CLIENTE ──────────────────────────────
 
 function generarHTMLComprobante(pedido: Pedido, idCorto: string): string {
+  // FIX: usar ADMIN_WHATSAPP para el boton de contacto del cliente
+  // CALLMEBOT_PHONE es el numero del bot, no el numero de contacto real
+  const whatsappContacto = process.env.ADMIN_WHATSAPP ?? process.env.CALLMEBOT_PHONE ?? '5493541000000';
+
   const itemsHTML = pedido.items.map(item => `
     <tr>
       <td style="padding:12px 0;border-bottom:1px solid #f3d4ac;font-family:Georgia,serif;font-size:15px;color:#3e3025;">
@@ -252,7 +246,6 @@ function generarHTMLComprobante(pedido: Pedido, idCorto: string): string {
           <tr>
             <td style="background:#ffffff;padding:32px;border-radius:0 0 16px 16px;border:1px solid #f3d4ac;border-top:none;">
 
-              <!-- Saludo -->
               <p style="margin:0 0 8px;font-family:Georgia,serif;font-size:22px;color:#3e3025;">
                 ¡Hola, ${pedido.cliente.nombre.split(' ')[0]}! 🍑
               </p>
@@ -260,13 +253,11 @@ function generarHTMLComprobante(pedido: Pedido, idCorto: string): string {
                 Recibimos tu pedido. Cada pieza que hacemos tiene nuestra huella — esperamos que la tuya te traiga muchas mañanas hermosas.
               </p>
 
-              <!-- Número de pedido -->
               <div style="background:#fdf8f3;border:2px solid #e9b57a;border-radius:12px;padding:16px 20px;margin-bottom:28px;text-align:center;">
                 <p style="margin:0 0 4px;font-size:12px;color:#957d5e;letter-spacing:2px;text-transform:uppercase;">Número de pedido</p>
                 <p style="margin:0;font-family:Georgia,serif;font-size:28px;color:#c06930;letter-spacing:4px;font-weight:bold;">#${idCorto}</p>
               </div>
 
-              <!-- Items -->
               <p style="margin:0 0 16px;font-size:13px;font-weight:600;color:#957d5e;letter-spacing:2px;text-transform:uppercase;">Tus piezas</p>
               <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px;">
                 ${itemsHTML}
@@ -287,7 +278,6 @@ function generarHTMLComprobante(pedido: Pedido, idCorto: string): string {
                 </tr>
               </table>
 
-              <!-- Envío y pago -->
               <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px;">
                 <tr>
                   <td width="48%" style="background:#fdf8f3;border-radius:12px;padding:16px;vertical-align:top;">
@@ -302,7 +292,6 @@ function generarHTMLComprobante(pedido: Pedido, idCorto: string): string {
                 </tr>
               </table>
 
-              <!-- Dirección -->
               <div style="background:#fdf8f3;border-radius:12px;padding:16px 20px;margin-bottom:28px;">
                 <p style="margin:0 0 8px;font-size:11px;color:#957d5e;letter-spacing:2px;text-transform:uppercase;">📍 Dirección de entrega</p>
                 <p style="margin:0;font-size:15px;color:#3e3025;line-height:1.6;">
@@ -311,15 +300,14 @@ function generarHTMLComprobante(pedido: Pedido, idCorto: string): string {
                 </p>
               </div>
 
-              <!-- Próximos pasos -->
               <div style="background:#faecd8;border-radius:12px;padding:20px;margin-bottom:28px;border-left:4px solid #e9b57a;">
                 <p style="margin:0 0 12px;font-size:13px;font-weight:600;color:#957d5e;letter-spacing:2px;text-transform:uppercase;">¿Qué sigue ahora?</p>
                 ${pasosSiguientes}
               </div>
 
-              <!-- CTA -->
+              <!-- CTA WhatsApp — FIX: usa ADMIN_WHATSAPP, no CALLMEBOT_PHONE -->
               <div style="text-align:center;margin-bottom:28px;">
-                <a href="https://wa.me/${process.env.CALLMEBOT_PHONE ?? '5493541000000'}?text=Hola!%20Tengo%20una%20consulta%20sobre%20mi%20pedido%20%23${idCorto}"
+                <a href="https://wa.me/${whatsappContacto}?text=Hola!%20Tengo%20una%20consulta%20sobre%20mi%20pedido%20%23${idCorto}"
                    style="display:inline-block;background:#3e3025;color:#faecd8;padding:14px 32px;border-radius:50px;text-decoration:none;font-size:14px;font-weight:600;letter-spacing:1px;">
                   💬 Consultar por WhatsApp
                 </a>
@@ -405,10 +393,9 @@ PAGO: ${pedido.metodoPago}
   `);
 }
 
-// ── FUNCIÓN PRINCIPAL — llama a las dos notificaciones ────
+// ── FUNCIÓN PRINCIPAL ────────────────────────────────────
 
 export async function notificarNuevoPedido(pedido: Pedido): Promise<void> {
-  // Corren en paralelo — si una falla, la otra igual se envía
   await Promise.allSettled([
     enviarWhatsAppArtesana(pedido).catch(err =>
       console.error('[notificar] WhatsApp falló:', err.message)
@@ -419,10 +406,7 @@ export async function notificarNuevoPedido(pedido: Pedido): Promise<void> {
   ]);
 }
 
-
 // ── 3. TRACKING AL CLIENTE (WhatsApp + Email) ─────────────
-// Se dispara cuando la artesana carga el número de seguimiento
-// desde el panel admin → Pedidos → botón "📦 Cargar tracking"
 
 export async function enviarTrackingCliente(pedido: Pedido, trackingCorreo: string): Promise<void> {
   const idCorto = pedido.id.slice(-6).toUpperCase();
@@ -430,7 +414,6 @@ export async function enviarTrackingCliente(pedido: Pedido, trackingCorreo: stri
 
   await Promise.allSettled([
 
-    // WhatsApp al cliente
     (async () => {
       const phone  = process.env.CALLMEBOT_PHONE;
       const apikey = process.env.CALLMEBOT_APIKEY;
@@ -480,7 +463,6 @@ export async function enviarTrackingCliente(pedido: Pedido, trackingCorreo: stri
       }
     })(),
 
-    // Email al cliente con el tracking
     (async () => {
       const apiKey    = process.env.RESEND_API_KEY;
       const emailFrom = process.env.EMAIL_FROM ?? 'Melocotón Cerámica <pedidos@melocotonceramica.com.ar>';
@@ -538,7 +520,6 @@ function generarHTMLTracking(pedido: Pedido, idCorto: string, tracking: string, 
           Hola ${pedido.cliente.nombre.split(' ')[0]}, despachamos tu pedido #${idCorto} y ya está viajando hacia vos.
         </p>
 
-        <!-- Tracking destacado -->
         <div style="background:#3e3025;border-radius:16px;padding:24px;margin-bottom:28px;text-align:center;">
           <p style="margin:0 0 8px;font-size:12px;color:#e9b57a;letter-spacing:3px;text-transform:uppercase;">Número de seguimiento</p>
           <p style="margin:0 0 16px;font-family:Georgia,serif;font-size:28px;color:#faecd8;letter-spacing:4px;font-weight:bold;">${tracking}</p>
@@ -548,7 +529,6 @@ function generarHTMLTracking(pedido: Pedido, idCorto: string, tracking: string, 
           </a>
         </div>
 
-        <!-- Dirección de entrega -->
         <div style="background:#fdf8f3;border-radius:12px;padding:16px 20px;margin-bottom:24px;">
           <p style="margin:0 0 8px;font-size:11px;color:#957d5e;letter-spacing:2px;text-transform:uppercase;">📍 Se entrega en</p>
           <p style="margin:0;font-size:15px;color:#3e3025;line-height:1.7;">
@@ -558,7 +538,6 @@ function generarHTMLTracking(pedido: Pedido, idCorto: string, tracking: string, 
           </p>
         </div>
 
-        <!-- Detalle del pedido -->
         <p style="margin:0 0 12px;font-size:12px;font-weight:600;color:#957d5e;letter-spacing:2px;text-transform:uppercase;">Lo que pediste</p>
         <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px;">
           ${itemsHTML}
