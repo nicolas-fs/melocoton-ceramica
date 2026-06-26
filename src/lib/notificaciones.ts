@@ -89,7 +89,7 @@ export async function enviarWhatsAppArtesana(pedido: Pedido): Promise<void> {
 
   try {
     const url = `https://api.callmebot.com/whatsapp.php?phone=${phone}&text=${encodeURIComponent(mensaje)}&apikey=${apikey}`;
-    const res  = await fetch(url, { signal: AbortSignal.timeout(10_000) });
+    const res  = await fetch(url, { signal: AbortSignal.timeout(20_000) });
 
     if (res.ok) {
       console.log(`[WhatsApp] ✓ Enviado a ${phone} — Pedido #${idCorto}`);
